@@ -2,7 +2,7 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { Polygon } from 'detect-collisions';
 import * as PIXI from 'pixi.js';
 import { DisplayObject } from 'pixi.js';
-import { PLAY_AREA_WIDTH } from './constants';
+import { GRID_UNIT, PLAY_AREA_WIDTH } from './constants';
 import GameEntity from './game_entity';
 
 export default class Enemy extends GameEntity {
@@ -10,15 +10,44 @@ export default class Enemy extends GameEntity {
 
   tween: TWEEN.Tween<DisplayObject>;
 
-  constructor(x: number, y: number, period: number, spritesheet: PIXI.Spritesheet) {
-    const sprite = new PIXI.Sprite(spritesheet.textures['SmallVehicle-Idle']);
+  constructor(
+    x: number, y: number, gridSize: number, period: number, spritesheet: PIXI.Spritesheet,
+  ) {
+    const spriteName = Enemy.selectSpriteNameFromGridSize(gridSize);
+    const sprite = new PIXI.Sprite(spritesheet.textures[spriteName]);
+    const halfWidth = gridSize * GRID_UNIT * 0.5 - 1;
+    const halfHeight = GRID_UNIT * 0.5 - 1;
     sprite.anchor.set(0.5, 0.5);
-    super(x, y, sprite, new Polygon(0, 0, [[-15, -15], [15, -15], [-15, 15], [15, 15]]));
+    super(
+      x,
+      y,
+      sprite,
+      new Polygon(
+        0,
+        0,
+        [
+          [-halfWidth, -halfHeight],
+          [halfWidth, -halfHeight],
+          [-halfWidth, halfHeight],
+          [halfWidth, halfHeight]],
+      ),
+    );
 
     this.dest = { x: x + PLAY_AREA_WIDTH * 2 };
     this.tween = new TWEEN.Tween(this.displayObject)
       .to(this.dest, period)
       .repeat(Infinity)
       .start();
+  }
+
+  private static selectSpriteNameFromGridSize(gridSize: number) : string {
+    switch (gridSize) {
+      case 1:
+        return 'SmallVehicle-Idle';
+      case 2:
+        return 'LargeVehicle-Idle';
+      default:
+        return '';
+    }
   }
 }

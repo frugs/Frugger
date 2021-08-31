@@ -1,33 +1,33 @@
 { "frames": {
    "Frog-Idle": {
-    "frame": { "x": 0, "y": 0, "w": 44, "h": 34 },
+    "frame": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
-    "trimmed": true,
-    "spriteSourceSize": { "x": 10, "y": 17, "w": 44, "h": 34 },
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    },
    "Frog-Jump": {
-    "frame": { "x": 44, "y": 0, "w": 44, "h": 34 },
+    "frame": { "x": 64, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
-    "trimmed": true,
-    "spriteSourceSize": { "x": 10, "y": 17, "w": 44, "h": 34 },
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    },
    "SmallVehicle-Idle": {
-    "frame": { "x": 0, "y": 34, "w": 44, "h": 34 },
+    "frame": { "x": 0, "y": 64, "w": 64, "h": 64 },
     "rotated": false,
-    "trimmed": true,
-    "spriteSourceSize": { "x": 10, "y": 17, "w": 44, "h": 34 },
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    },
-   "SmallVehicle-Jump": {
-    "frame": { "x": 44, "y": 34, "w": 44, "h": 34 },
+   "LargeVehicle-Idle": {
+    "frame": { "x": 0, "y": 128, "w": 64, "h": 64 },
     "rotated": false,
-    "trimmed": true,
-    "spriteSourceSize": { "x": 10, "y": 17, "w": 44, "h": 34 },
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    }
@@ -37,7 +37,7 @@
   "version": "1.x-dev",
   "image": "frugger_sprites.png",
   "format": "RGBA8888",
-  "size": { "w": 88, "h": 68 },
+  "size": { "w": 128, "h": 192 },
   "scale": "1",
   "frameTags": [
    { "name": "Idle", "from": 0, "to": 0, "direction": "forward" },
@@ -45,7 +45,8 @@
   ],
   "layers": [
    { "name": "Frog", "opacity": 255, "blendMode": "normal" },
-   { "name": "SmallVehicle", "opacity": 255, "blendMode": "normal" }
+   { "name": "SmallVehicle", "opacity": 255, "blendMode": "normal" },
+   { "name": "LargeVehicle", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]

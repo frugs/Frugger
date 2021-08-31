@@ -6,9 +6,16 @@ import Game from './game';
 import GameEntity from './game_entity';
 
 export enum LaneSpot {
-  SmallVehicle,
   Gap,
+  SmallVehicle,
+  LargeVehicle,
 }
+
+export const LaneSpotGridSize: { [key in LaneSpot]: number } = {
+  [LaneSpot.Gap]: 1,
+  [LaneSpot.SmallVehicle]: 1,
+  [LaneSpot.LargeVehicle]: 2,
+};
 
 export class Lane extends GameEntity {
   readonly blueprint : Array<LaneSpot>;
@@ -29,7 +36,7 @@ export class Lane extends GameEntity {
     spritesheet: PIXI.Spritesheet,
   ) {
     const container = new PIXI.Container();
-    super(0, (laneNumber + 0.5) * -GRID_UNIT, container);
+    super(0, (laneNumber) * -GRID_UNIT, container);
     this.blueprint = blueprint;
     this.container = container;
     this.period = period;
@@ -45,9 +52,11 @@ export class Lane extends GameEntity {
   spawnEnemies() : void {
     let x = -PLAY_AREA_WIDTH;
     this.blueprint.forEach((laneSpot) => {
+      const gridSize = LaneSpotGridSize[laneSpot];
       switch (laneSpot) {
-        case LaneSpot.SmallVehicle: {
-          const enemy = new Enemy(x, 0, this.period, this.spritesheet);
+        case LaneSpot.SmallVehicle:
+        case LaneSpot.LargeVehicle: {
+          const enemy = new Enemy(x, 0, gridSize, this.period, this.spritesheet);
           enemy.spawnIn(this.game, this.container);
           break;
         }
@@ -55,7 +64,7 @@ export class Lane extends GameEntity {
         default:
           break;
       }
-      x += PLAY_AREA_WIDTH / this.blueprint.length;
+      x += (PLAY_AREA_WIDTH / this.blueprint.length);
     });
   }
 }
