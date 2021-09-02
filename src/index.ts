@@ -4,7 +4,7 @@ import arrayShuffle from 'array-shuffle';
 import { Timer } from 'eventemitter3-timer';
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
-import { GAME_HEIGHT, GAME_WIDTH, GRID_UNIT } from './constants';
+import { GAME_HEIGHT, GRID_UNIT } from './constants';
 import Game from './game';
 import GameBounds from './game_bounds';
 import InteractionController from './interaction_controller';
