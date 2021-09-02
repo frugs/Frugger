@@ -29,7 +29,11 @@ export default class GameBounds {
 
   globalScale: number;
 
-  constructor(viewportWidth: number, viewportHeight: number, globalScale: number) {
+  isRotated: boolean;
+
+  constructor(
+    viewportWidth: number, viewportHeight: number, globalScale: number, isRotated: boolean,
+  ) {
     const playAreaWidth = 800;
 
     this.playAreaMinX = (viewportWidth / 2) - (playAreaWidth / 2);
@@ -50,5 +54,6 @@ export default class GameBounds {
     this.centreY = viewportHeight / 2;
 
     this.globalScale = globalScale;
+    this.isRotated = isRotated;
   }
 }

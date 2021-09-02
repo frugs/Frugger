@@ -1,12 +1,16 @@
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
+import GameBounds from './game_bounds';
 import Player from './player';
 
 export default class InteractionController {
   private readonly player: Player;
 
-  public constructor(player: Player) {
+  private readonly gameBounds: GameBounds;
+
+  public constructor(player: Player, gameBounds: GameBounds) {
     this.player = player;
+    this.gameBounds = gameBounds;
   }
 
   public registerInteractionListeners(app: PIXI.Application) : void {
@@ -21,8 +25,12 @@ export default class InteractionController {
   private handlePointerEvent(pointerEvent: PIXI.InteractionEvent) : void {
     const { player } = this;
     const { x, y } = pointerEvent.data.global;
-    const isLeft = x <= 400;
-    const isTop = y <= 300;
+    const isLeft = this.gameBounds.isRotated
+      ? y >= this.gameBounds.centreY
+      : x <= this.gameBounds.centreX;
+    const isTop = this.gameBounds.isRotated
+      ? x <= this.gameBounds.centreX
+      : y <= this.gameBounds.centreY;
 
     if (isLeft) {
       if (isTop) {

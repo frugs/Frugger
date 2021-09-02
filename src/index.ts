@@ -4,25 +4,26 @@ import arrayShuffle from 'array-shuffle';
 import { Timer } from 'eventemitter3-timer';
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
+import { GAME_HEIGHT, GAME_WIDTH, GRID_UNIT } from './constants';
 import Game from './game';
+import GameBounds from './game_bounds';
+import InteractionController from './interaction_controller';
 import Lane from './lane';
 import { LaneBlueprints } from './lane_blueprints';
 import Player from './player';
-import InteractionController from './interaction_controller';
-import { GAME_HEIGHT, GAME_WIDTH, GRID_UNIT } from './constants';
-import GameBounds from './game_bounds';
 
-async function setUp() : Promise<void> {
-  const globalScale = Math.min(window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT);
+async function setUp(
+  viewportWidth: number, viewportHeight: number, isRotated: boolean,
+) : Promise<void> {
+  const globalScale = Math.min(viewportWidth / GAME_WIDTH, viewportHeight / GAME_HEIGHT);
   const gameBounds = new GameBounds(
-    window.innerWidth / globalScale, window.innerHeight / globalScale, globalScale,
+    viewportWidth / globalScale, viewportHeight / globalScale, globalScale, isRotated,
   );
 
   const app = new PIXI.Application({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: viewportWidth,
+    height: viewportHeight,
     backgroundColor: 0xEEEEEE,
-    resolution: window.devicePixelRatio || 1,
   });
   app.stage.scale.set(globalScale, globalScale);
   app.stage.y = -128 - GRID_UNIT;
@@ -171,7 +172,7 @@ async function setUp() : Promise<void> {
     Keyboard.update();
   }, PIXI.UPDATE_PRIORITY.HIGH);
 
-  const interactionController = new InteractionController(player);
+  const interactionController = new InteractionController(player, gameBounds);
 
   // Wait a bit for vehicles before allowing player to move
   new Timer(2000).on('end', () => {
@@ -184,17 +185,7 @@ async function setUp() : Promise<void> {
   app.stage.addChild(rightLetterBox);
 }
 
-if (window.innerHeight > window.innerWidth) {
-  if (!(window as any).fullScreen) {
-    const div = document.createElement('div');
-    div.onclick = async () => {
-      document.body.removeChild(div);
-      await document.body.requestFullscreen();
-      await setUp();
-    };
-    div.textContent = 'This game requires fullscreen. Click for fullscreen.';
-    document.body.appendChild(div);
-  }
-} else {
-  setUp();
-}
+const landscapeWidth = Math.max(window.innerWidth, window.innerHeight);
+const landscapeHeight = Math.min(window.innerWidth, window.innerHeight);
+const isRotated = landscapeWidth !== window.innerWidth;
+setUp(landscapeWidth, landscapeHeight, isRotated);
