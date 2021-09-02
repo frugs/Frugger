@@ -25,12 +25,13 @@ export default class InteractionController {
   private handlePointerEvent(pointerEvent: PIXI.InteractionEvent) : void {
     const { player } = this;
     const { x, y } = pointerEvent.data.global;
+
     const isLeft = this.gameBounds.isRotated
-      ? y >= this.gameBounds.centreY
-      : x <= this.gameBounds.centreX;
+      ? y >= this.gameBounds.centreY * this.gameBounds.globalScale
+      : x <= this.gameBounds.centreX * this.gameBounds.globalScale;
     const isTop = this.gameBounds.isRotated
-      ? x <= this.gameBounds.centreX
-      : y <= this.gameBounds.centreY;
+      ? x <= this.gameBounds.centreX * this.gameBounds.globalScale
+      : y <= this.gameBounds.centreY * this.gameBounds.globalScale;
 
     if (isLeft) {
       if (isTop) {

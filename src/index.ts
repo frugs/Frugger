@@ -15,7 +15,7 @@ import Player from './player';
 async function setUp(
   viewportWidth: number, viewportHeight: number, isRotated: boolean,
 ) : Promise<void> {
-  const globalScale = Math.min(viewportWidth / GAME_WIDTH, viewportHeight / GAME_HEIGHT);
+  const globalScale = viewportHeight / GAME_HEIGHT;
   const gameBounds = new GameBounds(
     viewportWidth / globalScale, viewportHeight / globalScale, globalScale, isRotated,
   );
@@ -30,16 +30,16 @@ async function setUp(
 
   const leftLetterBox = new PIXI.Graphics()
     .beginFill(0x000000, 1)
-    .drawRect(0, -Number.MAX_SAFE_INTEGER / 2, gameBounds.playAreaMinX, Number.MAX_SAFE_INTEGER)
+    .drawRect(0, -100000 / 2, gameBounds.playAreaMinX, 200000)
     .endFill();
 
   const rightLetterBox = new PIXI.Graphics()
     .beginFill(0x000000, 1)
     .drawRect(
       gameBounds.playAreaMaxX,
-      -Number.MAX_SAFE_INTEGER / 2,
-      gameBounds.viewportWidth,
-      Number.MAX_SAFE_INTEGER,
+      -100000,
+      gameBounds.playAreaMinX,
+      200000,
     )
     .endFill();
 
@@ -71,7 +71,7 @@ async function setUp(
     }
 
     stageTween = new TWEEN.Tween(app.stage)
-      .to({ y: gameBounds.centreY - dest.y * app.stage.scale.y }, 100)
+      .to({ y: (gameBounds.centreY - dest.y) * app.stage.scale.y }, 100)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .delay(delay)
       .onStart(() => { delay -= 10; })

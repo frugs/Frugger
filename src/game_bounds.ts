@@ -36,7 +36,10 @@ export default class GameBounds {
   ) {
     const playAreaWidth = 800;
 
-    this.playAreaMinX = (viewportWidth / 2) - (playAreaWidth / 2);
+    this.centreX = viewportWidth / 2;
+    this.centreY = viewportHeight / 2;
+
+    this.playAreaMinX = this.centreX - (playAreaWidth / 2);
     this.playAreaMaxX = this.playAreaMinX + playAreaWidth;
     this.playAreaMinY = 0;
     this.playAreaWidth = playAreaWidth;
@@ -49,9 +52,6 @@ export default class GameBounds {
     this.viewportMaxY = viewportHeight;
     this.viewportWidth = viewportWidth;
     this.viewportHeight = viewportHeight;
-
-    this.centreX = viewportWidth / 2;
-    this.centreY = viewportHeight / 2;
 
     this.globalScale = globalScale;
     this.isRotated = isRotated;
