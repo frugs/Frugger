@@ -5,8 +5,8 @@ import { Timer } from 'eventemitter3-timer';
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
 import Game from './game';
-import { Lane } from './lane';
-import * as BLUEPRINTS from './lane_blueprints';
+import Lane from './lane';
+import { LaneBlueprints } from './lane_blueprints';
 import Player from './player';
 import InteractionController from './interaction_controller';
 import { GRID_UNIT } from './constants';
@@ -57,8 +57,8 @@ async function setUp() : Promise<void> {
       const lane = new Lane(
         laneIndex,
         i % 3 === 0
-          ? arrayShuffle(BLUEPRINTS.LowBusySmallLargeVehicleLane)
-          : arrayShuffle(BLUEPRINTS.VeryLowBusySmallVehicleLane),
+          ? arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane)
+          : arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane),
         20000,
         game,
         spritesheet,
@@ -72,21 +72,32 @@ async function setUp() : Promise<void> {
     }
   }
 
-  for (let i = 0; i < 50; i += 1, laneIndex += 1) {
+  for (let i = 0; i < 100; i += 1, laneIndex += 1) {
     // Leave a 3 lane gap between successive lanes
     if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
       const random = Math.random();
-      let blueprint = BLUEPRINTS.LowBusySmallLargeVehicleLane;
-      if (random < 0.2) {
-        blueprint = BLUEPRINTS.HighBusySmallLargeVehicleLane;
-      } else if (random < 0.5) {
-        blueprint = BLUEPRINTS.MidBusySmallVehicleLane;
+      let blueprint = LaneBlueprints.LowBusySmallLargeVehicleLane;
+
+      if (i < 50) {
+        if (random < 0.1) {
+          blueprint = LaneBlueprints.VeryLowBusyLargeVehicleLane;
+        } else if (random < 0.2) {
+          blueprint = LaneBlueprints.VeryLowBusySmallVehicleLane;
+        } else if (random < 0.4) {
+          blueprint = LaneBlueprints.MidBusySmallVehicleLane;
+        }
+      } else if (random < 0.1) {
+        blueprint = LaneBlueprints.HighBusySmallLargeVehicleLane;
+      } else if (random < 0.2) {
+        blueprint = LaneBlueprints.MidBusySmallLargeVehicleLane;
+      } else if (random < 0.4) {
+        blueprint = LaneBlueprints.MidBusySmallVehicleLane;
       }
 
       const lane = new Lane(
         laneIndex,
         arrayShuffle(blueprint),
-        15000 * 0.8 ** Math.floor(laneIndex / 20),
+        20000 * 0.9 ** Math.floor(i / 30),
         game,
         spritesheet,
       );
@@ -99,18 +110,18 @@ async function setUp() : Promise<void> {
     }
   }
 
-  for (let i = 0; i < 25; i += 1, laneIndex += 1) {
+  for (let i = 0; i < 100; i += 1, laneIndex += 1) {
     // Leave a 3 lane gap between successive lanes
     if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
       const lane = new Lane(
         laneIndex,
-        arrayShuffle(BLUEPRINTS.HighBusySmallLargeVehicleLane),
-        12000 * 0.8 ** Math.floor(laneIndex / 20),
+        arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane),
+        12000 * 0.8 ** Math.floor(i / 20) + 4000 * Math.floor(Math.random() * 3),
         game,
         spritesheet,
       );
 
-      if (Math.floor(i / 2) % 2 === 0) {
+      if (i % 16 <= 8) {
         lane.displayObject.scale.x = -1;
         lane.displayObject.x = 800;
       }

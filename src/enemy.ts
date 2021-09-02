@@ -15,9 +15,11 @@ export default class Enemy extends GameEntity {
   ) {
     const spriteName = Enemy.selectSpriteNameFromGridSize(gridSize);
     const sprite = new PIXI.Sprite(spritesheet.textures[spriteName]);
-    const halfWidth = gridSize * GRID_UNIT * 0.5 - 1;
-    const halfHeight = GRID_UNIT * 0.5 - 1;
     sprite.anchor.set(0.5, 0.5);
+    sprite.scale.x = 2;
+
+    const halfWidth = gridSize * GRID_UNIT * 0.5 - 2;
+    const halfHeight = GRID_UNIT * 0.5 - 2;
     super(
       x,
       y,
@@ -42,9 +44,9 @@ export default class Enemy extends GameEntity {
 
   private static selectSpriteNameFromGridSize(gridSize: number) : string {
     switch (gridSize) {
-      case 1:
-        return 'SmallVehicle-Idle';
       case 2:
+        return 'SmallVehicle-Idle';
+      case 4:
         return 'LargeVehicle-Idle';
       default:
         return '';

@@ -1,75 +1,83 @@
-import { LaneSpot } from './lane';
+export enum LaneSpot {
+  Gap,
+  SmallVehicle,
+  LargeVehicle,
+}
 
-export const VeryLowBusySmallVehicleLane = [
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap];
+export const LaneSpotGridSize: { [key in LaneSpot]: number } = {
+  [LaneSpot.Gap]: 1,
+  [LaneSpot.SmallVehicle]: 2,
+  [LaneSpot.LargeVehicle]: 4,
+};
 
-export const VeryLowBusyLargeVehicleLane = [
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap];
+export class LaneBlueprints {
+  static readonly VeryLowBusySmallVehicleLane = [
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap];
 
-export const LowBusySmallLargeVehicleLane = [
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap];
+  static readonly VeryLowBusyLargeVehicleLane = [
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap];
 
-export const MidBusySmallVehicleLane = [
-  LaneSpot.SmallVehicle,
-  LaneSpot.SmallVehicle,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap];
+  static readonly LowBusySmallLargeVehicleLane = [
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap];
 
-export const MidBusySmallLargeVehicleLane = [
-  LaneSpot.SmallVehicle,
-  LaneSpot.LargeVehicle,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap];
+  static readonly MidBusySmallVehicleLane = [
+    LaneSpot.SmallVehicle,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap];
 
-export const HighBusySmallLargeVehicleLane = [
-  LaneSpot.SmallVehicle,
-  LaneSpot.LargeVehicle,
-  LaneSpot.SmallVehicle,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.Gap,
-  LaneSpot.LargeVehicle,
-  LaneSpot.Gap,
-  LaneSpot.SmallVehicle,
-  LaneSpot.SmallVehicle];
+  static readonly MidBusySmallLargeVehicleLane = [
+    LaneSpot.SmallVehicle,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap];
+
+  static readonly HighBusySmallLargeVehicleLane = [
+    LaneSpot.SmallVehicle,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.LargeVehicle,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.Gap,
+    LaneSpot.SmallVehicle];
+}

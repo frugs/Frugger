@@ -26,7 +26,7 @@ export default class Player extends GameEntity {
   public constructor(x: number, y: number, spritesheet: PIXI.Spritesheet, game: Game) {
     const sprite = PIXI.Sprite.from(spritesheet.textures['Frog-Idle']);
     sprite.anchor.set(0.5, 0.5);
-    super(x, y, sprite, new Circle(0, 0, 15));
+    super(x, y, sprite, new Circle(0, 0, 5));
     this.sprite = sprite;
     this.start = { x, y };
     this.dest = { x, y };

@@ -4,20 +4,9 @@ import { GRID_UNIT, PLAY_AREA_WIDTH } from './constants';
 import Enemy from './enemy';
 import Game from './game';
 import GameEntity from './game_entity';
+import { LaneSpot, LaneSpotGridSize } from './lane_blueprints';
 
-export enum LaneSpot {
-  Gap,
-  SmallVehicle,
-  LargeVehicle,
-}
-
-export const LaneSpotGridSize: { [key in LaneSpot]: number } = {
-  [LaneSpot.Gap]: 1,
-  [LaneSpot.SmallVehicle]: 1,
-  [LaneSpot.LargeVehicle]: 2,
-};
-
-export class Lane extends GameEntity {
+export default class Lane extends GameEntity {
   readonly blueprint : Array<LaneSpot>;
 
   readonly period : number;
@@ -51,12 +40,20 @@ export class Lane extends GameEntity {
 
   spawnEnemies() : void {
     let x = -PLAY_AREA_WIDTH;
+    const blueprintGridWidth = this.blueprint.reduce(
+      (acc, laneSpot) => acc + LaneSpotGridSize[laneSpot],
+      0,
+    );
+
     this.blueprint.forEach((laneSpot) => {
       const gridSize = LaneSpotGridSize[laneSpot];
+      const spaceAllocation = PLAY_AREA_WIDTH * (gridSize / blueprintGridWidth);
       switch (laneSpot) {
         case LaneSpot.SmallVehicle:
         case LaneSpot.LargeVehicle: {
-          const enemy = new Enemy(x, 0, gridSize, this.period, this.spritesheet);
+          const enemy = new Enemy(
+            x + (spaceAllocation * 0.5), 0, gridSize, this.period, this.spritesheet,
+          );
           enemy.spawnIn(this.game, this.container);
           break;
         }
@@ -64,7 +61,7 @@ export class Lane extends GameEntity {
         default:
           break;
       }
-      x += (PLAY_AREA_WIDTH / this.blueprint.length);
+      x += spaceAllocation;
     });
   }
 }
