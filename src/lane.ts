@@ -1,8 +1,9 @@
 import { Timer } from 'eventemitter3-timer';
 import * as PIXI from 'pixi.js';
-import { GRID_UNIT, PLAY_AREA_WIDTH } from './constants';
+import { GRID_UNIT } from './constants';
 import Enemy from './enemy';
 import Game from './game';
+import GameBounds from './game_bounds';
 import GameEntity from './game_entity';
 import { LaneSpot, LaneSpotGridSize } from './lane_blueprints';
 
@@ -15,21 +16,26 @@ export default class Lane extends GameEntity {
 
   private readonly game : Game;
 
+  private readonly gameBounds: GameBounds;
+
   private readonly spritesheet: PIXI.Spritesheet;
 
   constructor(
+    x: number,
     laneNumber: number,
     blueprint: Array<LaneSpot>,
     period: number,
     game: Game,
+    gameBounds: GameBounds,
     spritesheet: PIXI.Spritesheet,
   ) {
     const container = new PIXI.Container();
-    super(0, (laneNumber) * -GRID_UNIT, container);
+    super(x, (laneNumber) * -GRID_UNIT, container);
     this.blueprint = blueprint;
     this.container = container;
     this.period = period;
     this.game = game;
+    this.gameBounds = gameBounds;
     this.spritesheet = spritesheet;
 
     const spawnDelay = Math.random() * 200;
@@ -39,7 +45,7 @@ export default class Lane extends GameEntity {
   }
 
   spawnEnemies() : void {
-    let x = -PLAY_AREA_WIDTH;
+    let x = -this.gameBounds.playAreaWidth;
     const blueprintGridWidth = this.blueprint.reduce(
       (acc, laneSpot) => acc + LaneSpotGridSize[laneSpot],
       0,
@@ -47,12 +53,17 @@ export default class Lane extends GameEntity {
 
     this.blueprint.forEach((laneSpot) => {
       const gridSize = LaneSpotGridSize[laneSpot];
-      const spaceAllocation = PLAY_AREA_WIDTH * (gridSize / blueprintGridWidth);
+      const spaceAllocation = this.gameBounds.playAreaWidth * (gridSize / blueprintGridWidth);
       switch (laneSpot) {
         case LaneSpot.SmallVehicle:
         case LaneSpot.LargeVehicle: {
           const enemy = new Enemy(
-            x + (spaceAllocation * 0.5), 0, gridSize, this.period, this.spritesheet,
+            x + (spaceAllocation * 0.5),
+            0,
+            gridSize,
+            this.period,
+            this.gameBounds,
+            this.spritesheet,
           );
           enemy.spawnIn(this.game, this.container);
           break;

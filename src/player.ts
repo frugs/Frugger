@@ -3,6 +3,7 @@ import { Circle } from 'detect-collisions';
 import * as PIXI from 'pixi.js';
 import { DisplayObject, Ticker } from 'pixi.js';
 import Game from './game';
+import GameBounds from './game_bounds';
 import GameEntity from './game_entity';
 
 const GRID_UNIT = 32;
@@ -17,21 +18,26 @@ export default class Player extends GameEntity {
 
   isDead: boolean;
 
-  private spritesheet: PIXI.Spritesheet;
+  private readonly spritesheet: PIXI.Spritesheet;
 
-  private game: Game;
+  private readonly game: Game;
+
+  private readonly gameBounds: GameBounds;
 
   private tween: TWEEN.Tween<DisplayObject>;
 
-  public constructor(x: number, y: number, spritesheet: PIXI.Spritesheet, game: Game) {
+  public constructor(
+    x: number, y: number, spritesheet: PIXI.Spritesheet, game: Game, gameBounds: GameBounds,
+  ) {
     const sprite = PIXI.Sprite.from(spritesheet.textures['Frog-Idle']);
     sprite.anchor.set(0.5, 0.5);
-    super(x, y, sprite, new Circle(0, 0, 5));
+    super(x, y, sprite, new Circle(0, 0, 5, gameBounds.globalScale));
     this.sprite = sprite;
     this.start = { x, y };
     this.dest = { x, y };
     this.spritesheet = spritesheet;
     this.game = game;
+    this.gameBounds = gameBounds;
     this.tween = null;
     this.isDead = false;
   }

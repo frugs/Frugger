@@ -9,15 +9,40 @@ import Lane from './lane';
 import { LaneBlueprints } from './lane_blueprints';
 import Player from './player';
 import InteractionController from './interaction_controller';
-import { GRID_UNIT } from './constants';
+import { GAME_HEIGHT, GAME_WIDTH, GRID_UNIT } from './constants';
+import GameBounds from './game_bounds';
+
+const globalScale = Math.min(window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT);
+const gameBounds = new GameBounds(
+  window.innerWidth / globalScale, window.innerHeight / globalScale, globalScale,
+);
 
 const app = new PIXI.Application({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   backgroundColor: 0xEEEEEE,
   resolution: window.devicePixelRatio || 1,
 });
+app.stage.scale.set(globalScale, globalScale);
 app.stage.y = -128 - GRID_UNIT;
+
+const leftLetterBox = new PIXI.Graphics()
+  .beginFill(0x000000, 1)
+  .drawRect(0, -Number.MAX_SAFE_INTEGER / 2, gameBounds.playAreaMinX, Number.MAX_SAFE_INTEGER)
+  .endFill();
+
+const rightLetterBox = new PIXI.Graphics()
+  .beginFill(0x000000, 1)
+  .drawRect(
+    gameBounds.playAreaMaxX,
+    -Number.MAX_SAFE_INTEGER / 2,
+    gameBounds.viewportWidth,
+    Number.MAX_SAFE_INTEGER,
+  )
+  .endFill();
+
+app.stage.addChild(leftLetterBox);
+app.stage.addChild(rightLetterBox);
 
 const game = new Game(app.stage);
 
@@ -30,7 +55,9 @@ async function setUp() : Promise<void> {
 
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
-  const player = new Player(400, 128, spritesheet, game);
+  const player = new Player(
+    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
+  );
   player.spawnIn(game);
 
   let stageTween: TWEEN.Tween<PIXI.Container> = null;
@@ -41,7 +68,7 @@ async function setUp() : Promise<void> {
     }
 
     stageTween = new TWEEN.Tween(app.stage)
-      .to({ y: 300 - dest.y }, 100)
+      .to({ y: gameBounds.centreY - dest.y * app.stage.scale.y }, 100)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .delay(delay)
       .onStart(() => { delay -= 10; })
@@ -55,18 +82,20 @@ async function setUp() : Promise<void> {
   // Leave a 3 lane gap between successive lanes
     if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
       const lane = new Lane(
+        gameBounds.playAreaMinX,
         laneIndex,
         i % 3 === 0
           ? arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane)
           : arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane),
         20000,
         game,
+        gameBounds,
         spritesheet,
       );
 
       if (Math.floor(i / 2) % 2 === 0) {
         lane.displayObject.scale.x = -1;
-        lane.displayObject.x = 800;
+        lane.displayObject.x = gameBounds.playAreaMaxX;
       }
       lane.spawnIn(game);
     }
@@ -95,16 +124,18 @@ async function setUp() : Promise<void> {
       }
 
       const lane = new Lane(
+        gameBounds.playAreaMinX,
         laneIndex,
         arrayShuffle(blueprint),
         20000 * 0.9 ** Math.floor(i / 30),
         game,
+        gameBounds,
         spritesheet,
       );
 
       if (Math.floor(i / 2) % 2 === 0) {
         lane.displayObject.scale.x = -1;
-        lane.displayObject.x = 800;
+        lane.displayObject.x = gameBounds.playAreaMaxX;
       }
       lane.spawnIn(game);
     }
@@ -114,16 +145,18 @@ async function setUp() : Promise<void> {
     // Leave a 3 lane gap between successive lanes
     if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
       const lane = new Lane(
+        gameBounds.playAreaMinX,
         laneIndex,
         arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane),
         12000 * 0.8 ** Math.floor(i / 20) + 4000 * Math.floor(Math.random() * 3),
         game,
+        gameBounds,
         spritesheet,
       );
 
       if (i % 16 <= 8) {
         lane.displayObject.scale.x = -1;
-        lane.displayObject.x = 800;
+        lane.displayObject.x = gameBounds.playAreaMaxX;
       }
       lane.spawnIn(game);
     }
@@ -143,6 +176,10 @@ async function setUp() : Promise<void> {
     interactionController.registerInteractionListeners(app);
     scrollViewportToDest(player.displayObject.position);
   }).start();
+
+  // re-add letterboxes to keep them at the top
+  app.stage.addChild(leftLetterBox);
+  app.stage.addChild(rightLetterBox);
 }
 setUp();
 

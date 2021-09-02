@@ -2,16 +2,24 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { Polygon } from 'detect-collisions';
 import * as PIXI from 'pixi.js';
 import { DisplayObject } from 'pixi.js';
-import { GRID_UNIT, PLAY_AREA_WIDTH } from './constants';
+import { GRID_UNIT } from './constants';
+import GameBounds from './game_bounds';
 import GameEntity from './game_entity';
 
 export default class Enemy extends GameEntity {
+  private readonly gameBounds : GameBounds;
+
   dest: { x: number; };
 
   tween: TWEEN.Tween<DisplayObject>;
 
   constructor(
-    x: number, y: number, gridSize: number, period: number, spritesheet: PIXI.Spritesheet,
+    x: number,
+    y: number,
+    gridSize: number,
+    period: number,
+    gameBounds: GameBounds,
+    spritesheet: PIXI.Spritesheet,
   ) {
     const spriteName = Enemy.selectSpriteNameFromGridSize(gridSize);
     const sprite = new PIXI.Sprite(spritesheet.textures[spriteName]);
@@ -32,10 +40,14 @@ export default class Enemy extends GameEntity {
           [halfWidth, -halfHeight],
           [-halfWidth, halfHeight],
           [halfWidth, halfHeight]],
+        undefined,
+        gameBounds.globalScale,
+        gameBounds.globalScale,
       ),
     );
 
-    this.dest = { x: x + PLAY_AREA_WIDTH * 2 };
+    this.gameBounds = gameBounds;
+    this.dest = { x: x + gameBounds.playAreaWidth * 2 };
     this.tween = new TWEEN.Tween(this.displayObject)
       .to(this.dest, period)
       .repeat(Infinity)

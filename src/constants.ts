@@ -1,2 +1,3 @@
 export const GRID_UNIT = 32;
-export const PLAY_AREA_WIDTH = 1024;
+export const GAME_WIDTH = 800;
+export const GAME_HEIGHT = 600;
