@@ -12,41 +12,43 @@ import InteractionController from './interaction_controller';
 import { GAME_HEIGHT, GAME_WIDTH, GRID_UNIT } from './constants';
 import GameBounds from './game_bounds';
 
-const globalScale = Math.min(window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT);
-const gameBounds = new GameBounds(
-  window.innerWidth / globalScale, window.innerHeight / globalScale, globalScale,
-);
-
-const app = new PIXI.Application({
-  width: window.innerWidth,
-  height: window.innerHeight,
-  backgroundColor: 0xEEEEEE,
-  resolution: window.devicePixelRatio || 1,
-});
-app.stage.scale.set(globalScale, globalScale);
-app.stage.y = -128 - GRID_UNIT;
-
-const leftLetterBox = new PIXI.Graphics()
-  .beginFill(0x000000, 1)
-  .drawRect(0, -Number.MAX_SAFE_INTEGER / 2, gameBounds.playAreaMinX, Number.MAX_SAFE_INTEGER)
-  .endFill();
-
-const rightLetterBox = new PIXI.Graphics()
-  .beginFill(0x000000, 1)
-  .drawRect(
-    gameBounds.playAreaMaxX,
-    -Number.MAX_SAFE_INTEGER / 2,
-    gameBounds.viewportWidth,
-    Number.MAX_SAFE_INTEGER,
-  )
-  .endFill();
-
-app.stage.addChild(leftLetterBox);
-app.stage.addChild(rightLetterBox);
-
-const game = new Game(app.stage);
-
 async function setUp() : Promise<void> {
+  const globalScale = Math.min(window.innerWidth / GAME_WIDTH, window.innerHeight / GAME_HEIGHT);
+  const gameBounds = new GameBounds(
+    window.innerWidth / globalScale, window.innerHeight / globalScale, globalScale,
+  );
+
+  const app = new PIXI.Application({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: 0xEEEEEE,
+    resolution: window.devicePixelRatio || 1,
+  });
+  app.stage.scale.set(globalScale, globalScale);
+  app.stage.y = -128 - GRID_UNIT;
+
+  const leftLetterBox = new PIXI.Graphics()
+    .beginFill(0x000000, 1)
+    .drawRect(0, -Number.MAX_SAFE_INTEGER / 2, gameBounds.playAreaMinX, Number.MAX_SAFE_INTEGER)
+    .endFill();
+
+  const rightLetterBox = new PIXI.Graphics()
+    .beginFill(0x000000, 1)
+    .drawRect(
+      gameBounds.playAreaMaxX,
+      -Number.MAX_SAFE_INTEGER / 2,
+      gameBounds.viewportWidth,
+      Number.MAX_SAFE_INTEGER,
+    )
+    .endFill();
+
+  app.stage.addChild(leftLetterBox);
+  app.stage.addChild(rightLetterBox);
+
+  document.body.appendChild(app.view);
+
+  const game = new Game(app.stage);
+
   const loader = PIXI.Loader.shared;
   const resourcesLoaded = new Promise<void>((resolve) => loader
     .add('assets/frugger_sprites.json')
@@ -181,6 +183,18 @@ async function setUp() : Promise<void> {
   app.stage.addChild(leftLetterBox);
   app.stage.addChild(rightLetterBox);
 }
-setUp();
 
-document.body.appendChild(app.view);
+if (window.innerHeight > window.innerWidth) {
+  if (!(window as any).fullScreen) {
+    const div = document.createElement('div');
+    div.onclick = async () => {
+      document.body.removeChild(div);
+      await document.body.requestFullscreen();
+      await setUp();
+    };
+    div.textContent = 'This game requires fullscreen. Click for fullscreen.';
+    document.body.appendChild(div);
+  }
+} else {
+  setUp();
+}
