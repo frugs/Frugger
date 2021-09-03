@@ -48,7 +48,12 @@ export default class Player extends GameEntity {
       return;
     }
 
-    this.dest.x -= GRID_UNIT;
+    const newX = this.dest.x - GRID_UNIT;
+    if (newX < this.gameBounds.playAreaMinX) {
+      return;
+    }
+
+    this.dest.x = newX;
     this.dest.y -= GRID_UNIT;
     this.animateMoveToDest();
   }
@@ -58,7 +63,12 @@ export default class Player extends GameEntity {
       return;
     }
 
-    this.dest.x += GRID_UNIT;
+    const newX = this.dest.x + GRID_UNIT;
+    if (newX > this.gameBounds.playAreaMaxX) {
+      return;
+    }
+
+    this.dest.x = newX;
     this.dest.y -= GRID_UNIT;
     this.animateMoveToDest();
   }
@@ -68,7 +78,12 @@ export default class Player extends GameEntity {
       return;
     }
 
-    this.dest.x -= GRID_UNIT;
+    const newX = this.dest.x - GRID_UNIT;
+    if (newX < this.gameBounds.playAreaMinX) {
+      return;
+    }
+
+    this.dest.x = newX;
     this.dest.y += GRID_UNIT;
     this.animateMoveToDest();
   }
@@ -78,7 +93,12 @@ export default class Player extends GameEntity {
       return;
     }
 
-    this.dest.x += GRID_UNIT;
+    const newX = this.dest.x + GRID_UNIT;
+    if (newX > this.gameBounds.playAreaMaxX) {
+      return;
+    }
+
+    this.dest.x = newX;
     this.dest.y += GRID_UNIT;
     this.animateMoveToDest();
   }
