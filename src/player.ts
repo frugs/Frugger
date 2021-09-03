@@ -31,7 +31,8 @@ export default class Player extends GameEntity {
   ) {
     const sprite = PIXI.Sprite.from(spritesheet.textures['Frog-Idle']);
     sprite.anchor.set(0.5, 0.5);
-    super(x, y, sprite, new Circle(0, 0, 5, gameBounds.globalScale));
+    super(x, y, sprite, new Circle(0, 0, 10, gameBounds.globalScale));
+
     this.sprite = sprite;
     this.start = { x, y };
     this.dest = { x, y };
