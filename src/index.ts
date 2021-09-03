@@ -2,6 +2,7 @@ import { Ticker } from '@pixi/ticker';
 import * as TWEEN from '@tweenjs/tween.js';
 import arrayShuffle from 'array-shuffle';
 import { Timer } from 'eventemitter3-timer';
+import { Viewport } from 'pixi-viewport';
 import * as PIXI from 'pixi.js';
 import Keyboard from 'pixi.js-keyboard';
 import { GAME_HEIGHT, GRID_UNIT } from './constants';
@@ -25,8 +26,15 @@ async function setUp(
     height: viewportHeight,
     backgroundColor: 0xEEEEEE,
   });
-  app.stage.scale.set(globalScale, globalScale);
-  app.stage.y = -128 - GRID_UNIT;
+  const viewport = new Viewport({
+    screenWidth: viewportWidth,
+    screenHeight: viewportHeight,
+    worldWidth: gameBounds.viewportWidth,
+    worldHeight: gameBounds.viewportHeight,
+  });
+  viewport.clamp({ direction: 'x' });
+  viewport.scale.set(globalScale, globalScale);
+  app.stage.addChild(viewport);
 
   const leftLetterBox = new PIXI.Graphics()
     .beginFill(0x000000, 1)
@@ -43,12 +51,12 @@ async function setUp(
     )
     .endFill();
 
-  app.stage.addChild(leftLetterBox);
-  app.stage.addChild(rightLetterBox);
+  viewport.addChild(leftLetterBox);
+  viewport.addChild(rightLetterBox);
 
   document.body.appendChild(app.view);
 
-  const game = new Game(app.stage);
+  const game = new Game(viewport);
 
   const loader = PIXI.Loader.shared;
   const resourcesLoaded = new Promise<void>((resolve) => loader
@@ -62,23 +70,6 @@ async function setUp(
     gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
   );
   player.spawnIn(game);
-
-  let stageTween: TWEEN.Tween<PIXI.Container> = null;
-  let delay = 100;
-  const scrollViewportToDest = (dest: { x: number, y: number }) => {
-    if (stageTween != null) {
-      stageTween.stop();
-    }
-
-    stageTween = new TWEEN.Tween(app.stage)
-      .to({ y: (gameBounds.centreY - dest.y) * app.stage.scale.y }, 100)
-      .easing(TWEEN.Easing.Quadratic.InOut)
-      .delay(delay)
-      .onStart(() => { delay -= 10; })
-      .onComplete(() => { delay = 100; })
-      .start();
-  };
-  player.on('move', scrollViewportToDest);
 
   let laneIndex = 1;
   for (let i = 0; i < 25; i += 1, laneIndex += 1) {
@@ -177,12 +168,12 @@ async function setUp(
   // Wait a bit for vehicles before allowing player to move
   new Timer(2000).on('end', () => {
     interactionController.registerInteractionListeners(app);
-    scrollViewportToDest(player.displayObject.position);
+    viewport.follow(player.displayObject, { speed: 15, acceleration: 1, radius: GRID_UNIT * 0.5 });
   }).start();
 
   // re-add letterboxes to keep them at the top
-  app.stage.addChild(leftLetterBox);
-  app.stage.addChild(rightLetterBox);
+  viewport.addChild(leftLetterBox);
+  viewport.addChild(rightLetterBox);
 }
 
 const landscapeWidth = Math.max(window.innerWidth, window.innerHeight);
