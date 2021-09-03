@@ -9,8 +9,8 @@ import { GAME_HEIGHT, GRID_UNIT } from './constants';
 import Game from './game';
 import GameBounds from './game_bounds';
 import InteractionController from './interaction_controller';
-import Lane from './lane';
-import { LaneBlueprints } from './lane_blueprints';
+import { Lane, LaneType } from './lane';
+import { LaneBlueprints, LaneSpot } from './lane_blueprints';
 import Player from './player';
 import Score from './score';
 
@@ -67,95 +67,74 @@ async function setUp(
 
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
+  for (let i = 0; i < 200; i += 1) {
+    // Leave a 3 lane gap between successive lanes
+    const rem = i % 8;
+    let laneType: LaneType = null;
+    if (rem === 3) {
+      laneType = LaneType.Bottom;
+    } else if (rem >= 4 && rem <= 6) {
+      laneType = LaneType.Middle;
+    } else if (rem === 7) {
+      laneType = LaneType.Top;
+    }
+
+    if (laneType != null) {
+      let blueprint: Array<LaneSpot> = [];
+      let period = 0;
+      if (i < 24) {
+        blueprint = i % 3 === 0
+          ? arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane)
+          : arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane);
+        period = 20000;
+      } else if (i < 120) {
+        const random = Math.random();
+        blueprint = arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane);
+
+        if (i < 50) {
+          if (random < 0.1) {
+            blueprint = arrayShuffle(LaneBlueprints.VeryLowBusyLargeVehicleLane);
+          } else if (random < 0.2) {
+            blueprint = arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane);
+          } else if (random < 0.4) {
+            blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+          }
+        } else if (random < 0.1) {
+          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
+        } else if (random < 0.2) {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+        } else if (random < 0.4) {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+        }
+        period = 20000 * 0.9 ** Math.floor(i / 30);
+      } else {
+        blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
+        period = 20000 * 0.8 ** Math.floor(i / 20) + 4000 * Math.floor(Math.random() * 3);
+      }
+
+      const lane = new Lane(
+        gameBounds.playAreaMinX,
+        i + 1,
+        laneType,
+        blueprint,
+        period,
+        game,
+        gameBounds,
+        spritesheet,
+      );
+
+      if (Math.floor(i / 2) % 2 === 0) {
+        lane.displayObject.scale.x = -1;
+        lane.displayObject.x = gameBounds.playAreaMaxX;
+      }
+      lane.spawnIn(game);
+    }
+  }
+
   const player = new Player(
     gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
   );
   player.spawnIn(game);
-
-  let laneIndex = 1;
-  for (let i = 0; i < 25; i += 1, laneIndex += 1) {
-  // Leave a 3 lane gap between successive lanes
-    if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
-      const lane = new Lane(
-        gameBounds.playAreaMinX,
-        laneIndex,
-        i % 3 === 0
-          ? arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane)
-          : arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane),
-        20000,
-        game,
-        gameBounds,
-        spritesheet,
-      );
-
-      if (Math.floor(i / 2) % 2 === 0) {
-        lane.displayObject.scale.x = -1;
-        lane.displayObject.x = gameBounds.playAreaMaxX;
-      }
-      lane.spawnIn(game);
-    }
-  }
-
-  for (let i = 0; i < 100; i += 1, laneIndex += 1) {
-    // Leave a 3 lane gap between successive lanes
-    if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
-      const random = Math.random();
-      let blueprint = LaneBlueprints.LowBusySmallLargeVehicleLane;
-
-      if (i < 50) {
-        if (random < 0.1) {
-          blueprint = LaneBlueprints.VeryLowBusyLargeVehicleLane;
-        } else if (random < 0.2) {
-          blueprint = LaneBlueprints.VeryLowBusySmallVehicleLane;
-        } else if (random < 0.4) {
-          blueprint = LaneBlueprints.MidBusySmallVehicleLane;
-        }
-      } else if (random < 0.1) {
-        blueprint = LaneBlueprints.HighBusySmallLargeVehicleLane;
-      } else if (random < 0.2) {
-        blueprint = LaneBlueprints.MidBusySmallLargeVehicleLane;
-      } else if (random < 0.4) {
-        blueprint = LaneBlueprints.MidBusySmallVehicleLane;
-      }
-
-      const lane = new Lane(
-        gameBounds.playAreaMinX,
-        laneIndex,
-        arrayShuffle(blueprint),
-        20000 * 0.9 ** Math.floor(i / 30),
-        game,
-        gameBounds,
-        spritesheet,
-      );
-
-      if (Math.floor(i / 2) % 2 === 0) {
-        lane.displayObject.scale.x = -1;
-        lane.displayObject.x = gameBounds.playAreaMaxX;
-      }
-      lane.spawnIn(game);
-    }
-  }
-
-  for (let i = 0; i < 100; i += 1, laneIndex += 1) {
-    // Leave a 3 lane gap between successive lanes
-    if (i % 8 !== 0 && i % 8 !== 1 && i % 8 !== 2) {
-      const lane = new Lane(
-        gameBounds.playAreaMinX,
-        laneIndex,
-        arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane),
-        12000 * 0.8 ** Math.floor(i / 20) + 4000 * Math.floor(Math.random() * 3),
-        game,
-        gameBounds,
-        spritesheet,
-      );
-
-      if (i % 16 <= 8) {
-        lane.displayObject.scale.x = -1;
-        lane.displayObject.x = gameBounds.playAreaMaxX;
-      }
-      lane.spawnIn(game);
-    }
-  }
 
   Ticker.shared.add(() => {
     Timer.timerManager.update(app.ticker.elapsedMS);

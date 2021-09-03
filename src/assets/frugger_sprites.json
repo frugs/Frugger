@@ -30,6 +30,30 @@
     "spriteSourceSize": { "x": 1, "y": 49, "w": 125, "h": 30 },
     "sourceSize": { "w": 128, "h": 128 },
     "duration": 100
+   },
+   "Lane-Bottom": {
+    "frame": { "x": 5, "y": 129, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 48, "y": 48, "w": 32, "h": 32 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "Lane-Middle": {
+    "frame": { "x": 47, "y": 129, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 48, "y": 48, "w": 32, "h": 32 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "Lane-Top": {
+    "frame": { "x": 89, "y": 129, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 48, "y": 48, "w": 32, "h": 32 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
    }
  },
  "meta": {
@@ -37,16 +61,20 @@
   "version": "1.x-dev",
   "image": "frugger_sprites.png",
   "format": "RGBA8888",
-  "size": { "w": 140, "h": 129 },
+  "size": { "w": 140, "h": 171 },
   "scale": "1",
   "frameTags": [
    { "name": "Idle", "from": 0, "to": 0, "direction": "forward" },
-   { "name": "Jump", "from": 1, "to": 1, "direction": "forward" }
+   { "name": "Jump", "from": 1, "to": 1, "direction": "forward" },
+   { "name": "Bottom", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "Middle", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "Top", "from": 4, "to": 4, "direction": "forward" }
   ],
   "layers": [
    { "name": "Frog", "opacity": 255, "blendMode": "normal" },
    { "name": "SmallVehicle", "opacity": 255, "blendMode": "normal" },
-   { "name": "LargeVehicle", "opacity": 255, "blendMode": "normal" }
+   { "name": "LargeVehicle", "opacity": 255, "blendMode": "normal" },
+   { "name": "Lane", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]
