@@ -25,7 +25,7 @@ async function setUp(
   const app = new PIXI.Application({
     width: viewportWidth,
     height: viewportHeight,
-    backgroundColor: 0xEEEEEE,
+    backgroundColor: 0x8bcb59,
   });
   const viewport = new Viewport({
     screenWidth: viewportWidth,
@@ -91,7 +91,7 @@ async function setUp(
         const random = Math.random();
         blueprint = arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane);
 
-        if (i < 50) {
+        if (i < 96) {
           if (random < 0.1) {
             blueprint = arrayShuffle(LaneBlueprints.VeryLowBusyLargeVehicleLane);
           } else if (random < 0.2) {
@@ -108,8 +108,16 @@ async function setUp(
         }
         period = 20000 * 0.9 ** Math.floor(i / 30);
       } else {
-        blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
-        period = 20000 * 0.8 ** Math.floor(i / 20) + 4000 * Math.floor(Math.random() * 3);
+        const random = Math.random();
+        if (random < 0.4) {
+          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
+        } else if (random < 0.7) {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+        } else {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+        }
+
+        period = 18000 * 0.9 ** Math.floor(i / 30) + 4000 * Math.floor(Math.random() * 3);
       }
 
       const lane = new Lane(
@@ -123,16 +131,17 @@ async function setUp(
         spritesheet,
       );
 
-      if (Math.floor(i / 2) % 2 === 0) {
+      if ((i < 120 && Math.floor(i / 2) % 2 === 0) || (i >= 120 && i % 16 >= 8)) {
         lane.displayObject.scale.x = -1;
         lane.displayObject.x = gameBounds.playAreaMaxX;
       }
+
       lane.spawnIn(game);
     }
   }
 
   const player = new Player(
-    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
+    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT * 120, spritesheet, game, gameBounds,
   );
   player.spawnIn(game);
 
