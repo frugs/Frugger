@@ -141,7 +141,7 @@ async function setUp(
   }
 
   const player = new Player(
-    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT * 120, spritesheet, game, gameBounds,
+    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
   );
   player.spawnIn(game);
 
