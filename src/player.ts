@@ -123,7 +123,7 @@ export default class Player extends GameEntity {
         this.isDead = false;
       });
 
-    super.emit('move', this.dest);
+    super.emit('move', this);
   }
 
   public update() {
@@ -136,6 +136,8 @@ export default class Player extends GameEntity {
         this.dest = { x: this.start.x, y: this.start.y };
         this.animateMoveToDest();
         this.isDead = true;
+
+        super.emit('dead', this);
       }
     });
   }

@@ -12,6 +12,7 @@ import InteractionController from './interaction_controller';
 import Lane from './lane';
 import { LaneBlueprints } from './lane_blueprints';
 import Player from './player';
+import Score from './score';
 
 async function setUp(
   viewportWidth: number, viewportHeight: number, isRotated: boolean,
@@ -174,6 +175,8 @@ async function setUp(
   // re-add letterboxes to keep them at the top
   viewport.addChild(leftLetterBox);
   viewport.addChild(rightLetterBox);
+
+  viewport.plugins.add('score', new Score(viewport, player));
 }
 
 const landscapeWidth = Math.max(window.innerWidth, window.innerHeight);
