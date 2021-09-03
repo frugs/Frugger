@@ -5,14 +5,6 @@ object-assign
 */
 
 /*!
- * @pixi/accessibility - v6.1.2
- * Compiled Thu, 12 Aug 2021 17:11:19 UTC
- *
- * @pixi/accessibility is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
  * @pixi/app - v6.1.2
  * Compiled Thu, 12 Aug 2021 17:11:19 UTC
  *
@@ -117,11 +109,13 @@ object-assign
  */
 
 /*!
- * @pixi/utils - v6.1.2
- * Compiled Thu, 12 Aug 2021 17:11:19 UTC
+ * pixi-viewport - v4.32.0
+ * Compiled Sat, 17 Jul 2021 16:47:05 UTC
  *
- * @pixi/utils is licensed under the MIT License.
+ * pixi-viewport is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
+ * 
+ * Copyright 2019-2020, David Figatner, All Rights Reserved
  */
 
 /*!
