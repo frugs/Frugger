@@ -24,7 +24,6 @@ export default class Enemy extends GameEntity {
     const spriteName = Enemy.selectSpriteNameFromGridSize(gridSize);
     const sprite = new PIXI.Sprite(spritesheet.textures[spriteName]);
     sprite.anchor.set(0.5, 0.5);
-    sprite.scale.x = 2;
 
     const halfWidth = gridSize * GRID_UNIT * 0.5 - 2;
     const halfHeight = GRID_UNIT * 0.5 - 2;
