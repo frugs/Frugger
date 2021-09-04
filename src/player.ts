@@ -1,3 +1,4 @@
+import { Sound } from '@pixi/sound';
 import * as TWEEN from '@tweenjs/tween.js';
 import { Circle } from 'detect-collisions';
 import * as PIXI from 'pixi.js';
@@ -24,10 +25,19 @@ export default class Player extends GameEntity {
 
   private readonly gameBounds: GameBounds;
 
+  private readonly jumpSound?: Sound;
+
   private tween: TWEEN.Tween<DisplayObject>;
 
+  private jumpCounter: number;
+
   public constructor(
-    x: number, y: number, spritesheet: PIXI.Spritesheet, game: Game, gameBounds: GameBounds,
+    x: number,
+    y: number,
+    spritesheet: PIXI.Spritesheet,
+    game: Game,
+    gameBounds: GameBounds,
+    jumpSound?: Sound,
   ) {
     const sprite = PIXI.Sprite.from(spritesheet.textures['Frog-Idle']);
     sprite.anchor.set(0.5, 0.5);
@@ -39,8 +49,10 @@ export default class Player extends GameEntity {
     this.spritesheet = spritesheet;
     this.game = game;
     this.gameBounds = gameBounds;
+    this.jumpSound = jumpSound;
     this.tween = null;
     this.isDead = false;
+    this.jumpCounter = 0;
   }
 
   private get isMoving() : boolean {
@@ -64,6 +76,8 @@ export default class Player extends GameEntity {
       return;
     }
 
+    this.playJumpSound();
+
     this.dest.x = newX;
     this.dest.y -= GRID_UNIT;
     this.animateMoveToDest();
@@ -82,6 +96,8 @@ export default class Player extends GameEntity {
     if (newX > this.gameBounds.playAreaMaxX) {
       return;
     }
+
+    this.playJumpSound();
 
     this.dest.x = newX;
     this.dest.y -= GRID_UNIT;
@@ -102,6 +118,8 @@ export default class Player extends GameEntity {
       return;
     }
 
+    this.playJumpSound();
+
     this.dest.x = newX;
     this.dest.y += GRID_UNIT;
     this.animateMoveToDest();
@@ -121,9 +139,17 @@ export default class Player extends GameEntity {
       return;
     }
 
+    this.playJumpSound();
+
     this.dest.x = newX;
     this.dest.y += GRID_UNIT;
     this.animateMoveToDest();
+  }
+
+  private playJumpSound() {
+    if (this.jumpCounter % 10 === 0) {
+      this.jumpSound?.play();
+    }
   }
 
   private animateMoveToDest() {

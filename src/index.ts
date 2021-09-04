@@ -8,10 +8,10 @@ import Keyboard from 'pixi.js-keyboard';
 import { GAME_HEIGHT, GRID_UNIT } from './constants';
 import Game from './game';
 import GameBounds from './game_bounds';
-import PlayerController from './player_controller';
 import { Lane, LaneType } from './lane';
 import { LaneBlueprints, LaneSpot } from './lane_blueprints';
 import Player from './player';
+import PlayerController from './player_controller';
 import Score from './score';
 
 async function setUp(
@@ -68,7 +68,11 @@ async function setUp(
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
   const player = new Player(
-    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
+    gameBounds.centreX,
+    gameBounds.viewportMinY - GRID_UNIT,
+    spritesheet,
+    game,
+    gameBounds,
   );
 
   for (let i = 0; i < 800; i += 1) {

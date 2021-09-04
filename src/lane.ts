@@ -8,7 +8,6 @@ import Game from './game';
 import GameBounds from './game_bounds';
 import GameEntity from './game_entity';
 import { LaneSpot, LaneSpotGridSize } from './lane_blueprints';
-import Player from './player';
 
 export enum LaneType {
   Top,
