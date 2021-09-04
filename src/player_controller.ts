@@ -3,7 +3,7 @@ import Keyboard from 'pixi.js-keyboard';
 import GameBounds from './game_bounds';
 import Player from './player';
 
-export default class InteractionController {
+export default class PlayerController {
   private readonly player: Player;
 
   private readonly gameBounds: GameBounds;

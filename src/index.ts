@@ -8,7 +8,7 @@ import Keyboard from 'pixi.js-keyboard';
 import { GAME_HEIGHT, GRID_UNIT } from './constants';
 import Game from './game';
 import GameBounds from './game_bounds';
-import InteractionController from './interaction_controller';
+import PlayerController from './player_controller';
 import { Lane, LaneType } from './lane';
 import { LaneBlueprints, LaneSpot } from './lane_blueprints';
 import Player from './player';
@@ -152,7 +152,7 @@ async function setUp(
     Keyboard.update();
   }, PIXI.UPDATE_PRIORITY.HIGH);
 
-  const interactionController = new InteractionController(player, gameBounds);
+  const interactionController = new PlayerController(player, gameBounds);
 
   // Wait a bit for vehicles before allowing player to move
   new Timer(2000).on('end', () => {

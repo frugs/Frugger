@@ -43,8 +43,19 @@ export default class Player extends GameEntity {
     this.isDead = false;
   }
 
+  private get isMoving() : boolean {
+    const deltaX = this.dest.x - this.displayObject.x;
+    const deltaY = this.dest.y - this.displayObject.y;
+    const deltaSquared = deltaX ** 2 + deltaY ** 2;
+    return deltaSquared > GRID_UNIT ** 2;
+  }
+
   public moveNW() {
     if (this.isDead) {
+      return;
+    }
+
+    if (this.isMoving) {
       return;
     }
 
@@ -63,6 +74,10 @@ export default class Player extends GameEntity {
       return;
     }
 
+    if (this.isMoving) {
+      return;
+    }
+
     const newX = this.dest.x + GRID_UNIT;
     if (newX > this.gameBounds.playAreaMaxX) {
       return;
@@ -78,6 +93,10 @@ export default class Player extends GameEntity {
       return;
     }
 
+    if (this.isMoving) {
+      return;
+    }
+
     const newX = this.dest.x - GRID_UNIT;
     if (newX < this.gameBounds.playAreaMinX) {
       return;
@@ -90,6 +109,10 @@ export default class Player extends GameEntity {
 
   public moveSE() {
     if (this.isDead) {
+      return;
+    }
+
+    if (this.isMoving) {
       return;
     }
 
