@@ -67,7 +67,7 @@ async function setUp(
 
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
-  for (let i = 0; i < 400; i += 1) {
+  for (let i = 0; i < 800; i += 1) {
     // Leave a 3 lane gap between successive lanes
     const rem = i % 8;
     let laneType: LaneType = null;
@@ -99,17 +99,33 @@ async function setUp(
           } else if (random < 0.6) {
             blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
           }
-        } else if (random < 0.2) {
+        } else if (rem === 3) {
+          if (random < 0.5) {
+            blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+          } else {
+            blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+          }
+        } else if (rem === 4) {
+          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
+        } else if (random < 0.1) {
           blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
         } else if (random < 0.4) {
-          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
-        } else if (random < 0.7) {
           blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+        } else if (random < 0.7) {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
         }
-        period = 20000 * 0.9 ** Math.floor(i / 30);
+        period = 20000 * 0.9 ** Math.floor(i / 64);
       } else {
         const random = Math.random();
-        if (random < 0.4) {
+        if (rem === 3) {
+          if (random < 0.5) {
+            blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+          } else {
+            blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
+          }
+        } else if (rem === 4) {
+          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
+        } else if (random < 0.4) {
           blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
         } else if (random < 0.7) {
           blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
@@ -117,7 +133,7 @@ async function setUp(
           blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
         }
 
-        period = 18000 * 0.9 ** Math.floor(i / 30) + 4000 * Math.floor(Math.random() * 3);
+        period = 18000 * 0.9 ** Math.floor(i / 64) + 4000 * Math.floor(Math.random() * 3);
       }
 
       const lane = new Lane(
@@ -131,7 +147,7 @@ async function setUp(
         spritesheet,
       );
 
-      if ((i < 120 && Math.floor(i / 2) % 2 === 0) || (i >= 120 && i % 16 >= 8)) {
+      if ((i < 256 && Math.floor(i / 2) % 2 === 0) || (i >= 256 && i % 16 >= 8)) {
         lane.displayObject.scale.x = -1;
         lane.displayObject.x = gameBounds.playAreaMaxX;
       }
