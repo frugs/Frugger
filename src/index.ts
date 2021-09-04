@@ -67,7 +67,7 @@ async function setUp(
 
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
-  for (let i = 0; i < 200; i += 1) {
+  for (let i = 0; i < 400; i += 1) {
     // Leave a 3 lane gap between successive lanes
     const rem = i % 8;
     let laneType: LaneType = null;
@@ -87,7 +87,7 @@ async function setUp(
           ? arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane)
           : arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane);
         period = 20000;
-      } else if (i < 120) {
+      } else if (i < 256) {
         const random = Math.random();
         blueprint = arrayShuffle(LaneBlueprints.LowBusySmallLargeVehicleLane);
 
@@ -96,14 +96,14 @@ async function setUp(
             blueprint = arrayShuffle(LaneBlueprints.VeryLowBusyLargeVehicleLane);
           } else if (random < 0.2) {
             blueprint = arrayShuffle(LaneBlueprints.VeryLowBusySmallVehicleLane);
-          } else if (random < 0.4) {
+          } else if (random < 0.6) {
             blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
           }
-        } else if (random < 0.1) {
-          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
         } else if (random < 0.2) {
-          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+          blueprint = arrayShuffle(LaneBlueprints.HighBusySmallLargeVehicleLane);
         } else if (random < 0.4) {
+          blueprint = arrayShuffle(LaneBlueprints.MidBusySmallLargeVehicleLane);
+        } else if (random < 0.7) {
           blueprint = arrayShuffle(LaneBlueprints.MidBusySmallVehicleLane);
         }
         period = 20000 * 0.9 ** Math.floor(i / 30);
