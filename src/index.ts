@@ -67,6 +67,10 @@ async function setUp(
 
   const { spritesheet } = loader.resources['assets/frugger_sprites.json'];
 
+  const player = new Player(
+    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
+  );
+
   for (let i = 0; i < 800; i += 1) {
     // Leave a 3 lane gap between successive lanes
     const rem = i % 8;
@@ -142,6 +146,7 @@ async function setUp(
         laneType,
         blueprint,
         period,
+        viewport,
         game,
         gameBounds,
         spritesheet,
@@ -156,9 +161,6 @@ async function setUp(
     }
   }
 
-  const player = new Player(
-    gameBounds.centreX, gameBounds.viewportMinY - GRID_UNIT, spritesheet, game, gameBounds,
-  );
   player.spawnIn(game);
 
   Ticker.shared.add(() => {
