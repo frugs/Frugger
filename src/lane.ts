@@ -67,16 +67,18 @@ export class Lane extends GameEntity {
     laneSprite.position.y = 5;
     container.addChild(laneSprite);
 
-    const spawnDelay = Math.random() * 200;
-    const spawnEnemies = this.spawnEnemies.bind(this);
-    new Timer(spawnDelay).on('end', spawnEnemies).start();
-    new Timer(spawnDelay + (this.period / 2)).on('end', spawnEnemies).start();
-
     Ticker.shared.add(() => {
       const deltaY = viewport.center.y - this.displayObject.y;
       const isNearViewport = deltaY ** 2 < viewport.worldScreenHeight ** 2;
       if (isNearViewport && this.enemyContainer.parent !== this.container) {
         this.container.addChild(this.enemyContainer);
+
+        if (this.enemyContainer.children.length === 0) {
+          const spawnDelay = Math.random() * 200;
+          const spawnEnemies = this.spawnEnemies.bind(this);
+          new Timer(spawnDelay).on('end', spawnEnemies).start();
+          new Timer(spawnDelay + (this.period / 2)).on('end', spawnEnemies).start();
+        }
       } else if (!isNearViewport && this.enemyContainer.parent === this.container) {
         this.container.removeChild(this.enemyContainer);
       }
