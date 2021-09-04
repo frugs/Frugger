@@ -69,7 +69,7 @@ export class Lane extends GameEntity {
 
     Ticker.shared.add(() => {
       const deltaY = viewport.center.y - this.displayObject.y;
-      const isNearViewport = deltaY ** 2 < viewport.worldScreenHeight ** 2;
+      const isNearViewport = deltaY ** 2 < (viewport.worldScreenHeight * 3) ** 2;
       if (isNearViewport && this.enemyContainer.parent !== this.container) {
         this.container.addChild(this.enemyContainer);
 
